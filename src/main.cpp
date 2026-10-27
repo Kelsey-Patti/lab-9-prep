@@ -126,6 +126,18 @@ int main() {
         // is between the two green lines (open space), in the soft exclusion zones (between the
         // green and red lines), or in the hard exclusion zones (beyond either of the red lines).
         //
+        sf::Vector2f playerPos = camera.worldToWindowPercent(player.position);
+        
+        if (playerPos.x < HARD_LIMIT_PERCENT){
+            camera.translateWindowPercent({playerPos.x-HARD_LIMIT_PERCENT, 0.f});
+        }else if(playerPos.x <SOFT_LIMIT_PERCENT){
+            camera.translateWindowPercent({SOFT_CAMERA_ALPHA*(playerPos.x-SOFT_LIMIT_PERCENT), 0.f});
+        }else if(playerPos.x > 1.0f-HARD_LIMIT_PERCENT){
+            camera.translateWindowPercent({playerPos.x-1+HARD_LIMIT_PERCENT, 0.f});
+        }else if(playerPos.x > 1.0f-SOFT_LIMIT_PERCENT){
+            camera.translateWindowPercent({SOFT_CAMERA_ALPHA*(playerPos.x-(1-SOFT_LIMIT_PERCENT)), 0.f});
+        }
+       
         // If the player is in the open zone, the camera does not need to move.
         //
         // If the player is in the soft exclusion zones, the camera should softly translate over
@@ -138,7 +150,7 @@ int main() {
         //
         // Use SOFT_LIMIT_PERCENT and HARD_LIMIT_PERCENT to parameterize the green and red
         // line positions.
-        camera.setCameraCenter({player.position.x, WINDOW_HEIGHT * 0.5f});
+        // camera.setCameraCenter({player.position.x, WINDOW_HEIGHT * 0.5f});
 
         worldView.setCenter(camera.getCameraCenter());
         window.clear(sf::Color::Black);
@@ -156,4 +168,4 @@ int main() {
         window.display();
     }
     return 0;
-}
+};
